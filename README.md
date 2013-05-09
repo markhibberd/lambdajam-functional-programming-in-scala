@@ -1,4 +1,5 @@
-## lambdajam workshop: introduction to functional programming in scala
+# lambdajam workshop
+## introduction to functional programming in scala
 
 This is the base project for "Functional Programming in Scala" workshop,
 for LambdaJam Australia conference.
