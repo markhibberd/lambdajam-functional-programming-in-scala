@@ -1,5 +1,5 @@
-gen
 *.iws
+*.ipr
 out
 target
 .idea
@@ -10,5 +10,5 @@ target
 /dist
 /tmp
 /project/boot
-*.swp
-repl-port
+/.project
+/.classpath
