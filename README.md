@@ -1,47 +1,29 @@
-# lambdajam workshop
 ## introduction to functional programming in scala
 
-This is the base project for "Functional Programming in Scala" workshop,
-for LambdaJam Australia conference.
-
-__note__: please test your environment before you arrive so we can get
+__note:__ please test your environment before you arrive so we can get
 started quickly on the day.
 
-__note__: test you environment as soon as possible, but please grab the
-latest copy of this repository the day before the course with a `git pull origin master`.
+__note:__ please make sure to grab the latest copy of this repository the day before the course with a `git pull origin master`.
 
 
 ## Getting started
 
-Before you attend you will need to get a few things
-ready and ensure everything is setup properly. `sbt`
-is going to do all the heavy lifting though, so
-hopefully it is all straight forward, if not, send
-us an email via <mark@hibberd.id.au>.
+If you have any problems email me via <mark@hibberd.id.au>.
 
-
-Pre requisuites.
+Pre-requisites:
 
  1. A valid install of java 6+
  2. git
- 3. **if you are windows only** install sbt using the [msi installer](http://scalasbt.artifactoryonline.com/scalasbt/sbt-native-packages/org/scala-sbt/sbt/0.12.3/sbt.msi)
+ 3. **if you are running windows only** install sbt using the [msi installer](http://scalasbt.artifactoryonline.com/scalasbt/sbt-native-packages/org/scala-sbt/sbt/0.12.3/sbt.msi)
 
 
-Getting scala and validating your environment (for unix):
-
-    git clone https://github.com/markhibberd/lambdajam-functional-programming-in-scala.git
-    cd lambdajam-functional-programming-in-scala
-    ./sbt test
-
-
-Getting scala and validating your environment (for windows):
+Getting scala and validating your environment:
 
     git clone https://github.com/markhibberd/lambdajam-functional-programming-in-scala.git
     cd lambdajam-functional-programming-in-scala
-    sbt test
+    ./sbt test   # (or just sbt test under windows)
 
-
-For either platform this may take a few minutes. It will:
+This may take a few minutes. It will:
 
  1. Download the sbt build tool.
  2. Download the required versions of scala.
@@ -49,14 +31,16 @@ For either platform this may take a few minutes. It will:
  4. Run the tests.
 
 
-You should see green output, no errors and, an exit code of 0.
+You should see success output, no errors and, an exit code of 0.
 
 
-## Working with scala.
+## Editors for working with scala.
 
-Any good text editor will be sufficient for the course. If you
-prefer an IDE, you can use the eclipse based scala-ide or
-intellij with the scala and sbt plugins installed.
+You should come armed with a good text editor. 
+
+Anything that you can navigate around quickly should be fine, but if you
+prefer an IDE, you can use the eclipse based [scala-ide](http://scala-ide.org/) 
+or [intellij](http://www.jetbrains.com/idea/) with the scala and sbt plugins installed.
 
 You can generate project files for intellij with:
 
