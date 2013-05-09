@@ -3,6 +3,11 @@
 This is the base project for "Functional Programming in Scala" workshop,
 for LambdaJam Australia conference.
 
+__note__: please test your environment before you arrive so we can get
+started quickly on the day.
+
+__note__: test you environment as soon as possible, but please grab the
+latest copy of this repository the day before the course with a `git pull origin master`.
 
 
 ## Getting started
@@ -13,17 +18,20 @@ is going to do all the heavy lifting though, so
 hopefully it is all straight forward, if not, send
 us an email via <mark@hibberd.id.au>.
 
+
 Pre requisuites.
 
  1. A valid install of java 6+
  2. git
  3. **windows only** install sbt using the [msi installer](http://scalasbt.artifactoryonline.com/scalasbt/sbt-native-packages/org/scala-sbt/sbt/0.12.3/sbt.msi)
 
+
 Getting scala and validating your environment (for unix):
 
     git clone https://github.com/markhibberd/lambdajam-functional-programming-in-scala.git
     cd lambdajam-functional-programming-in-scala
     ./sbt test
+
 
 Getting scala and validating your environment (for windows):
 
