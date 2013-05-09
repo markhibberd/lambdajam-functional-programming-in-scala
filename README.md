@@ -24,7 +24,7 @@ Pre requisuites.
 
  1. A valid install of java 6+
  2. git
- 3. **windows only** install sbt using the [msi installer](http://scalasbt.artifactoryonline.com/scalasbt/sbt-native-packages/org/scala-sbt/sbt/0.12.3/sbt.msi)
+ 3. **if you are windows only** install sbt using the [msi installer](http://scalasbt.artifactoryonline.com/scalasbt/sbt-native-packages/org/scala-sbt/sbt/0.12.3/sbt.msi)
 
 
 Getting scala and validating your environment (for unix):
