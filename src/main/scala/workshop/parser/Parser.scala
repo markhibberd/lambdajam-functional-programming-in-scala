@@ -1,4 +1,5 @@
 package workshop
+package parser
 
 import Parser._
 

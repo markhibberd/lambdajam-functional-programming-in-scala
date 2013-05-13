@@ -1,4 +1,5 @@
 package workshop
+package parser
 
 /*
 The awesome notation data structure is described by one of four possibilities:

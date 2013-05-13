@@ -1,4 +1,5 @@
 package workshop
+package parser
 
 case class ParseFail[A](m: String) extends ParseResult[A]
 case class ParseValue[A](v: A) extends ParseResult[A]
