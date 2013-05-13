@@ -13,7 +13,7 @@ object Warmup {
   ~~~ Use foldRight
   */
   def append[A](x: List[A], y: List[A]): List[A] =
-    sys.error("todo")
+    x.foldRight(y)(_ :: _)
 
   /*
   Exercise 2w
@@ -23,7 +23,7 @@ object Warmup {
   ~~~ Use foldLeft
   */
   def reverse[A](x: List[A]): List[A] =
-    sys.error("todo")
+    x.foldLeft[List[A]](Nil)((a, b) => b :: a)
 
   /*
   A pretend configuration structure consisting of a host and port.
@@ -45,7 +45,7 @@ object Warmup {
     Ensure these laws are satisfied in the implementation by code review.
     */
     def map[B](f: A => B): ConfigurationReader[B] =
-      sys.error("todo")
+      ConfigurationReader(f compose read)
 
     /*
     Exercise 4w
@@ -56,7 +56,7 @@ object Warmup {
     Ensure this law is satisfied in the implementation by code review.
     */
     def flatMap[B](f: A => ConfigurationReader[B]): ConfigurationReader[B] =
-      sys.error("todo")
+      ConfigurationReader(c => f(read(c)) read c)
   }
 
   object ConfigurationReader {
@@ -66,7 +66,7 @@ object Warmup {
     Return a configuration reader that always produces the given value.
     */
     def value[A](a: => A): ConfigurationReader[A] =
-      sys.error("todo")
+      ConfigurationReader(_ => a)
 
     /*
     Exercise 6w
@@ -78,7 +78,13 @@ object Warmup {
     ~~~ Use flatMap and map with explicit recursion.
     */
     def sequence[A](a: List[ConfigurationReader[A]]): ConfigurationReader[List[A]] =
-      sys.error("todo")
+      a match {
+        case Nil => value(Nil)
+        case h::t => for {
+                       q <- h
+                       r <- sequence(t)
+                     } yield q :: r
+      }
   }
 
   /*
@@ -96,7 +102,10 @@ object Warmup {
     Ensure these laws are satisfied in the implementation by code review.
     */
     def map[B](f: A => B): ConfigurationUpdater[B] =
-      sys.error("todo")
+      ConfigurationUpdater(c => {
+        val (a, d) = update(c)
+        (f(a), d)
+      })
 
     /*
     Exercise 8w
@@ -107,7 +116,10 @@ object Warmup {
     Ensure this law is satisfied in the implementation by code review.
     */
     def flatMap[B](f: A => ConfigurationUpdater[B]): ConfigurationUpdater[B] =
-      sys.error("todo")
+      ConfigurationUpdater(c => {
+        val (a, d) = update(c)
+        f(a) update d
+      })
   }
 
   object ConfigurationUpdater {
@@ -117,7 +129,7 @@ object Warmup {
     Return a configuration updater that always produces the given value and leaves the configuration unmodified.
     */
     def value[A](a: => A): ConfigurationUpdater[A] =
-      sys.error("todo")
+      ConfigurationUpdater(c => (a, c))
 
     /*
     Exercise 10w
@@ -129,6 +141,12 @@ object Warmup {
     ~~~ Use flatMap and map with explicit recursion.
     */
     def sequence[A](a: List[ConfigurationUpdater[A]]): ConfigurationUpdater[List[A]] =
-      sys.error("todo")
+      a match {
+        case Nil => value(Nil)
+        case h::t => for {
+                       q <- h
+                       r <- sequence(t)
+                     } yield q :: r
+      }
   }
 }
