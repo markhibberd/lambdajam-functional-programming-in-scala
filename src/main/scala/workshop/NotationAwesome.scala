@@ -25,7 +25,7 @@ object NotationAwesome {
   ~~~ Use string
   */
   def trueP: Parser[NotationAwesome] =
-    sys.error("todo")
+    string("true") map (_ => AwesomeTrue)
 
   /*
   Exercise 27
@@ -35,7 +35,7 @@ object NotationAwesome {
   ~~~ Use string
   */
   def falseP: Parser[NotationAwesome] =
-    sys.error("todo")
+    string("false") map (_ => AwesomeFalse)
 
   /*
   Exercise 28
@@ -47,7 +47,11 @@ object NotationAwesome {
   ~~~ Alternatively, use ap, map and other parsers
   */
   def stringP: Parser[NotationAwesome] =
-    sys.error("todo")
+    for {
+      _ <- is('"')
+      c <- satisfyPred(_ != '"').many
+      _ <- is('"')
+    } yield AwesomeString(c.mkString)
 
   /*
   Exercise 29
@@ -59,7 +63,13 @@ object NotationAwesome {
   ~~~ Alternatively, use ap, map, awesomeP, separation and other parsers
   */
   def totallyP: Parser[NotationAwesome] =
-    sys.error("todo")
+    for {
+      _ <- is('[')
+      _ <- spaces
+      a <- awesomeP separation is(',')
+      _ <- spaces
+      _ <- is(']')
+    } yield TotallyAwesome(a)
 
   /*
   Exercise 30
@@ -70,5 +80,10 @@ object NotationAwesome {
   ~~~ Alternatively, use ap, map, | and the parsers just written
   */
   def awesomeP: Parser[NotationAwesome] =
-    sys.error("todo")
+    for {
+      _ <- spaces
+      a <- totallyP | stringP | falseP | trueP
+      _ <- spaces
+    } yield a
+
 }

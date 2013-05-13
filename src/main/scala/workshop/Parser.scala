@@ -21,7 +21,9 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
   Ensure these laws are satisfied in the implementation by code review.
   */
   def map[B](f: A => B): Parser[B] =
-    sys.error("todo")
+    Parser(run(_) map {
+      case (j, a) => (j, f(a))
+    })
 
   /*
   Exercise 12
@@ -32,7 +34,10 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
   Ensure this law is satisfied in the implementation by code review.
   */
   def flatMap[B](f: A => Parser[B]): Parser[B] =
-    sys.error("todo")
+    Parser(i => run(i) match { 
+      case ParseFail(m) => ParseFail(m)
+      case ParseValue((rest, a)) => f(a) run rest
+    })
 
   def ap[B](f: Parser[A => B]): Parser[B] =
     for {
@@ -51,7 +56,7 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
   ~~~ Use ap and map.
   */
   def zip[B](b: Parser[B]): Parser[(A, B)] =  
-    sys.error("todo")
+    flatMap (a => b map ((a, _)))
 
   /*
   Exercise 14
@@ -59,7 +64,10 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
   Try this parser. If it fails, try the given parser with the same input.
   */
   def |(p: => Parser[A]): Parser[A] =
-    sys.error("todo")
+    Parser(i => run(i) match {
+      case ParseFail(_) => p run i
+      case ParseValue(a) => ParseValue(a)
+    })
 
   /*
   Exercise 15
@@ -69,7 +77,10 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
   ~~~ Use map with explicit recursion.
   */
   def many: Parser[List[A]] =
-    sys.error("todo")
+    Parser(i => run(i) match {
+      case ParseFail(_) => ParseValue((i, Nil))
+      case ParseValue((j, a)) => many map (a :: _) run j
+    })
 
   /*
   Exercise 16
@@ -79,7 +90,10 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
   ~~~ Use flatMap, map and many.
   */
   def many1: Parser[List[A]] =
-    sys.error("todo")
+    for {
+      h <- this
+      t <- this.many
+    } yield h :: t
 
   /*
   Exercise 17
@@ -88,8 +102,14 @@ case class Parser[A](run: In => ParseResult[(In, A)]) {
 
   ~~~ Use flatMap, map, value and many.
   */
-  def separation[B](p: Parser[B]): Parser[List[A]] =
-    sys.error("todo")
+  def separation[B](p: Parser[B]): Parser[List[A]] = {
+    val s = for {
+              h <- this
+              t <- p.flatMap(_ => this).many
+            } yield h::t
+    s | Parser.value(Nil)
+  }
+
 } 
 
 object Parser {
@@ -101,7 +121,7 @@ object Parser {
   Return a parser that consumes no input and always produces the given value.
   */
   def value[A](a: => A): Parser[A] =
-    sys.error("todo")
+    Parser(i => ParseValue(i, a))
 
   /*
   Exercise 19
@@ -109,7 +129,7 @@ object Parser {
   Return a parser that always fails with the given message.
   */
   def fail[A](m: => String): Parser[A] =  
-    sys.error("todo")
+    Parser(_ => ParseFail(m))
 
   /*
   Exercise 20
@@ -117,7 +137,10 @@ object Parser {
   Return a parser that consumes a character from input and fails if the input is empty.
   */
   def character: Parser[Char] =
-    sys.error("todo")
+    Parser {
+      case Nil => ParseFail("Unexpected end of stream")
+      case h::t => ParseValue((t, h))
+    }
 
   /*
   Exercise 21
@@ -129,7 +152,11 @@ object Parser {
   ~~~ Use character and flatMap
   */
   def satisfy(p: Char => Option[String]): Parser[Char] = 
-    sys.error("todo")
+    character flatMap (c => 
+      p(c) match {
+        case None => value(c)
+        case Some(m) => fail(m)
+      })
 
   def satisfyPred(p: Char => Boolean): Parser[Char] =
     satisfy(c => if(p(c)) None else Some("Unexpected character '" + c + "'"))
@@ -142,7 +169,7 @@ object Parser {
   ~~~ Use satisfy
   */
   def is(x: Char): Parser[Char] =
-    sys.error("todo")
+    satisfy(c => if(c == x) None else Some("Unexpected character '" + c + "'. Expecting '" + x + "'"))
 
   /*
   Exercise 23
@@ -152,7 +179,7 @@ object Parser {
   ~~~ Use satisfy and Char#isWhitespace
   */
   def space: Parser[Char] =
-    sys.error("todo")
+    satisfy(c => if(c.isWhitespace) None else Some("Unexpected character '" + c + "'. Expecting whitespace"))
 
   def spaces: Parser[List[Char]] =
     space.many
@@ -177,7 +204,13 @@ object Parser {
   ~~~ Alternatively, use ap and map with explicit recursion.
   */
   def sequence[A](a: List[Parser[A]]): Parser[List[A]] =
-    sys.error("todo")
+    a match {
+      case Nil => value(Nil)
+      case h::t => for {
+                     q <- h
+                     r <- sequence(t)
+                   } yield q :: r
+    }
 
   /*
   Exercise 25
@@ -187,7 +220,7 @@ object Parser {
   ~~~ Use sequence and List#fill
   */
   def replicate[A](n: Int, p: Parser[A]): Parser[List[A]] =
-    sys.error("todo")
+    sequence(List.fill(n)(p))
     
   def list(s: List[Char]): Parser[List[Char]] = 
     sequence(s map is)
