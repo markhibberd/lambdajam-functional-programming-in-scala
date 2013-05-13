@@ -1,4 +1,5 @@
 package workshop
+package parser
 
 object Tests {
   val tests: List[(String, Option[NotationAwesome], String)] =
