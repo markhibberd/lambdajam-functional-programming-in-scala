@@ -131,6 +131,12 @@ object ParseResult {
   ~~~ Alternatively, use ap and map with explicit recursion.
   */
   def sequence[A](a: List[ParseResult[A]]): ParseResult[List[A]] =
-    sys.error("todo")
+    a match {
+      case Nil => ParseValue(Nil)
+      case h::t => for {
+                     q <- h
+                     r <- sequence(t)
+                   } yield q :: r
+    }
 
 }
