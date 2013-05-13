@@ -13,7 +13,10 @@ sealed trait ParseResult[A] {
   Return whether or not this value is a fail.
   */
   def isFail: Boolean =
-    sys.error("todo")
+    this match {
+      case ParseFail(_) => true
+      case ParseValue(_) => false
+    }
 
   /*
   Exercise 2
@@ -22,7 +25,7 @@ sealed trait ParseResult[A] {
   ~~~ use isFail.
   */
   def isValue: Boolean =
-    sys.error("todo")
+    !isFail
 
   /*
   Exercise 3
@@ -34,7 +37,10 @@ sealed trait ParseResult[A] {
   Ensure these laws are satisfied in the implementation by code review.
   */
   def map[B](f: A => B): ParseResult[B] =
-    sys.error("todo")
+    this match {
+      case ParseFail(m) => ParseFail(m)
+      case ParseValue(v) => ParseValue(f(v))
+    }
 
   /*
   Exercise 4
@@ -45,7 +51,10 @@ sealed trait ParseResult[A] {
   Ensure this law is satisfied in the implementation by code review.
   */
   def flatMap[B](f: A => ParseResult[B]): ParseResult[B] =
-    sys.error("todo")
+    this match {
+      case ParseFail(m) => ParseFail(m)
+      case ParseValue(v) => f(v)
+    }
 
   def ap[B](f: ParseResult[A => B]): ParseResult[B] =
     for {
@@ -62,7 +71,7 @@ sealed trait ParseResult[A] {
   ~~~ Use ap and map.
   */
   def zip[B](b: ParseResult[B]): ParseResult[(A, B)] =
-    sys.error("todo")
+    flatMap(a => b map ((a, _)))
 
   /*
   Exercise 6
@@ -70,7 +79,10 @@ sealed trait ParseResult[A] {
   Return the possible fail message held by this parse result.
   */
   def message: Option[String] =
-    sys.error("todo")
+    this match {
+      case ParseFail(m) => Some(m)
+      case ParseValue(_) => None
+    }
 
   /*
   Exercise 7
@@ -78,7 +90,10 @@ sealed trait ParseResult[A] {
   Return the possible value held by this parse result.
   */
   def value: Option[A] =
-    sys.error("todo")
+    this match {
+      case ParseFail(_) => None
+      case ParseValue(r) => Some(r)
+    }
 
   /*
   Exercise 8
@@ -87,7 +102,10 @@ sealed trait ParseResult[A] {
   Otherwise, leave unchanged.
   */
   def withfail(e: String => String): ParseResult[A] =
-    sys.error("todo")
+    this match {
+      case ParseFail(m) => ParseFail(e(m))
+      case ParseValue(r) => ParseValue(r)
+    }
 
   /*
   Exercise 9
@@ -96,7 +114,7 @@ sealed trait ParseResult[A] {
   Otherwise, leave unchanged.
   */
   def fail(e: => String): ParseResult[A] =
-    sys.error("todo")
+    withfail(_ => e)
 
 }
 
@@ -112,6 +130,12 @@ object ParseResult {
   ~~~ Alternatively, use ap and map with explicit recursion.
   */
   def sequence[A](a: List[ParseResult[A]]): ParseResult[List[A]] =
-    sys.error("todo")
+    a match {
+      case Nil => ParseValue(Nil)
+      case h::t => for {
+                     q <- h
+                     r <- sequence(t)
+                   } yield q :: r
+    }
 
 }
