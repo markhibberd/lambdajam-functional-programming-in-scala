@@ -4,7 +4,15 @@ package parser
 /*
 The awesome notation data structure is described by one of four possibilities:
 */
-sealed trait NotationAwesome
+sealed trait NotationAwesome {
+  override def toString: String =
+    this match {
+      case AwesomeTrue => "true"
+      case AwesomeFalse => "false"
+      case AwesomeString(s) => '"' + s + "\""
+      case TotallyAwesome(a) => '[' + a.mkString(", ") + ']'
+    }
+}
 // 1) A true value, parsed as the string "true"
 case object AwesomeTrue extends NotationAwesome
 // 2) A false value, parsed as the string "false"
