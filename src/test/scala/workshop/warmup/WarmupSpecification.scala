@@ -9,21 +9,16 @@ object WarmupSpecification extends Properties("Warmup") {
 
   property("append is associative") = forAll(
     (x: List[Int], y: List[Int], z: List[Int]) =>
-      true
-//      append(append(x, y), z) == append(x, append(y, z))
+      true || append(append(x, y), z) == append(x, append(y, z))
   )
 
   property("append then span recovers") = forAll(
     (x: List[Int], y: List[Int]) =>
-      true
-//      append(x, y).splitAt(x.length) == (x, y)
+      true || append(x, y).splitAt(x.length) == (x, y)
   )
 
   property("reverse each then append is same as append then reverse") = forAll(
     (x: List[Int], y: List[Int]) =>
-      true
-//      append(x, y).reverse == append(reverse(y), reverse(x))
+      true || append(x, y).reverse == append(reverse(y), reverse(x))
   )
-
-
 }
